@@ -3238,6 +3238,29 @@
 			},
 			"additionalProperties": false
 		},
+		"NoExcessiveLinesPerFileConfiguration": {
+			"oneOf": [
+				{ "$ref": "#/$defs/RulePlainConfiguration" },
+				{ "$ref": "#/$defs/RuleWithNoExcessiveLinesPerFileOptions" }
+			]
+		},
+		"NoExcessiveLinesPerFileOptions": {
+			"type": "object",
+			"properties": {
+				"maxLines": {
+					"description": "The maximum number of lines allowed in a file.",
+					"type": ["integer", "null"],
+					"format": "uint16",
+					"maximum": 65535,
+					"minimum": 1
+				},
+				"skipBlankLines": {
+					"description": "When this option is set to `true`, blank lines are not counted towards the maximum line limit.",
+					"type": ["boolean", "null"]
+				}
+			},
+			"additionalProperties": false
+		},
 		"NoExcessiveLinesPerFunctionConfiguration": {
 			"oneOf": [
 				{ "$ref": "#/$defs/RulePlainConfiguration" },
@@ -5262,6 +5285,13 @@
 						{ "type": "null" }
 					]
 				},
+				"noExcessiveLinesPerFile": {
+					"description": "Restrict the number of lines in a file.\nSee <https://biomejs.dev/linter/rules/no-excessive-lines-per-file>",
+					"anyOf": [
+						{ "$ref": "#/$defs/NoExcessiveLinesPerFileConfiguration" },
+						{ "type": "null" }
+					]
+				},
 				"noFloatingPromises": {
 					"description": "Require Promise-like statements to be handled appropriately.\nSee <https://biomejs.dev/linter/rules/no-floating-promises>",
 					"anyOf": [
@@ -5539,6 +5569,13 @@
 						{ "type": "null" }
 					]
 				},
+				"useErrorCause": {
+					"description": "Enforce that new Error() is thrown with the original error as cause.\nSee <https://biomejs.dev/linter/rules/use-error-cause>",
+					"anyOf": [
+						{ "$ref": "#/$defs/UseErrorCauseConfiguration" },
+						{ "type": "null" }
+					]
+				},
 				"useExhaustiveSwitchCases": {
 					"description": "Require switch-case statements to be exhaustive.\nSee <https://biomejs.dev/linter/rules/use-exhaustive-switch-cases>",
 					"anyOf": [
@@ -5557,6 +5594,13 @@
 					"description": "Enforce the use of Array.prototype.find() over Array.prototype.filter() followed by [0] when looking for a single result.\nSee <https://biomejs.dev/linter/rules/use-find>",
 					"anyOf": [
 						{ "$ref": "#/$defs/UseFindConfiguration" },
+						{ "type": "null" }
+					]
+				},
+				"useLoneExecutableDefinition": {
+					"description": "Require queries, mutations, subscriptions or fragments each to be located in separate files.\nSee <https://biomejs.dev/linter/rules/use-lone-executable-definition>",
+					"anyOf": [
+						{ "$ref": "#/$defs/UseLoneExecutableDefinitionConfiguration" },
 						{ "type": "null" }
 					]
 				},
@@ -5613,6 +5657,13 @@
 					"description": "Require all argument names for fields & directives to be unique.\nSee <https://biomejs.dev/linter/rules/use-unique-argument-names>",
 					"anyOf": [
 						{ "$ref": "#/$defs/UseUniqueArgumentNamesConfiguration" },
+						{ "type": "null" }
+					]
+				},
+				"useUniqueEnumValueNames": {
+					"description": "Require all enum value names to be unique.\nSee <https://biomejs.dev/linter/rules/use-unique-enum-value-names>",
+					"anyOf": [
+						{ "$ref": "#/$defs/UseUniqueEnumValueNamesConfiguration" },
 						{ "type": "null" }
 					]
 				},
@@ -7012,6 +7063,15 @@
 			"properties": {
 				"level": { "$ref": "#/$defs/RulePlainConfiguration" },
 				"options": { "$ref": "#/$defs/NoExcessiveCognitiveComplexityOptions" }
+			},
+			"additionalProperties": false,
+			"required": ["level"]
+		},
+		"RuleWithNoExcessiveLinesPerFileOptions": {
+			"type": "object",
+			"properties": {
+				"level": { "$ref": "#/$defs/RulePlainConfiguration" },
+				"options": { "$ref": "#/$defs/NoExcessiveLinesPerFileOptions" }
 			},
 			"additionalProperties": false,
 			"required": ["level"]
@@ -9118,6 +9178,15 @@
 			"additionalProperties": false,
 			"required": ["level"]
 		},
+		"RuleWithUseErrorCauseOptions": {
+			"type": "object",
+			"properties": {
+				"level": { "$ref": "#/$defs/RulePlainConfiguration" },
+				"options": { "$ref": "#/$defs/UseErrorCauseOptions" }
+			},
+			"additionalProperties": false,
+			"required": ["level"]
+		},
 		"RuleWithUseErrorMessageOptions": {
 			"type": "object",
 			"properties": {
@@ -9481,6 +9550,15 @@
 				"fix": { "anyOf": [{ "$ref": "#/$defs/FixKind" }, { "type": "null" }] },
 				"level": { "$ref": "#/$defs/RulePlainConfiguration" },
 				"options": { "$ref": "#/$defs/UseLiteralKeysOptions" }
+			},
+			"additionalProperties": false,
+			"required": ["level"]
+		},
+		"RuleWithUseLoneExecutableDefinitionOptions": {
+			"type": "object",
+			"properties": {
+				"level": { "$ref": "#/$defs/RulePlainConfiguration" },
+				"options": { "$ref": "#/$defs/UseLoneExecutableDefinitionOptions" }
 			},
 			"additionalProperties": false,
 			"required": ["level"]
@@ -9896,6 +9974,15 @@
 			"properties": {
 				"level": { "$ref": "#/$defs/RulePlainConfiguration" },
 				"options": { "$ref": "#/$defs/UseUniqueElementIdsOptions" }
+			},
+			"additionalProperties": false,
+			"required": ["level"]
+		},
+		"RuleWithUseUniqueEnumValueNamesOptions": {
+			"type": "object",
+			"properties": {
+				"level": { "$ref": "#/$defs/RulePlainConfiguration" },
+				"options": { "$ref": "#/$defs/UseUniqueEnumValueNamesOptions" }
 			},
 			"additionalProperties": false,
 			"required": ["level"]
@@ -12103,6 +12190,24 @@
 			"type": "object",
 			"additionalProperties": false
 		},
+		"UseErrorCauseConfiguration": {
+			"oneOf": [
+				{ "$ref": "#/$defs/RulePlainConfiguration" },
+				{ "$ref": "#/$defs/RuleWithUseErrorCauseOptions" }
+			]
+		},
+		"UseErrorCauseOptions": {
+			"description": "Options for the `useErrorCause` rule.",
+			"type": "object",
+			"properties": {
+				"requireCatchParameter": {
+					"description": "When set to `true`, the rule requires that `catch` clauses have a parameter.",
+					"type": "boolean",
+					"default": true
+				}
+			},
+			"additionalProperties": false
+		},
 		"UseErrorMessageConfiguration": {
 			"oneOf": [
 				{ "$ref": "#/$defs/RulePlainConfiguration" },
@@ -12519,6 +12624,16 @@
 			]
 		},
 		"UseLiteralKeysOptions": {
+			"type": "object",
+			"additionalProperties": false
+		},
+		"UseLoneExecutableDefinitionConfiguration": {
+			"oneOf": [
+				{ "$ref": "#/$defs/RulePlainConfiguration" },
+				{ "$ref": "#/$defs/RuleWithUseLoneExecutableDefinitionOptions" }
+			]
+		},
+		"UseLoneExecutableDefinitionOptions": {
 			"type": "object",
 			"additionalProperties": false
 		},
@@ -13038,6 +13153,16 @@
 					"uniqueItems": true
 				}
 			},
+			"additionalProperties": false
+		},
+		"UseUniqueEnumValueNamesConfiguration": {
+			"oneOf": [
+				{ "$ref": "#/$defs/RulePlainConfiguration" },
+				{ "$ref": "#/$defs/RuleWithUseUniqueEnumValueNamesOptions" }
+			]
+		},
+		"UseUniqueEnumValueNamesOptions": {
+			"type": "object",
 			"additionalProperties": false
 		},
 		"UseUniqueFieldDefinitionNamesConfiguration": {
